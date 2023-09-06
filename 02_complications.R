@@ -1,3 +1,15 @@
+# Script and comments by Riinu Pius, 2023-09-06
+
+# This script wrangles the MOVER EPIC EHR post-op complications dataset
+# into a `one row per patient-procedure` table by:
+# 1. Creating variable 'any complication' which is set to No if all observations are "None".
+# 2. If comp_abbr complication is "AN Post-op Complications",
+# taking the value from smrtdta_elem_value and overwriting comp_abbr with it.
+# 3. Collapsing all complications stored in multiple rows
+# into a single row/cell per patient. Collapsing is done by comma (", ")
+# 4. Creating two derived variables called death and respiratory that look for these complications within the collapsed lists.
+
+
 library(tidyverse)
 
 complications_orig = read_csv(paste0(Sys.getenv("epic_emr"), "patient_post_op_complications.csv"))
