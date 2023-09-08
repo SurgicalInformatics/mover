@@ -6,3 +6,8 @@
 *rds
 waveform_decode.py
 checksums_argosafe_eddie
+.pt
+.ipynb_checkpoints
+*.pyc
+__pycache__
+.log
