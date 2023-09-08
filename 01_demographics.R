@@ -23,7 +23,18 @@ demographics = demographics_orig %>%
   # I've checked that duplicates are of the same admission but one has typos etc
   distinct(log_id, .keep_all = TRUE) %>% 
   rename(age = birth_date) %>% 
-  mutate(asa_rating = fct_reorder(asa_rating, asa_rating_c))
+  mutate(asa_rating = fct_reorder(asa_rating, asa_rating_c)) %>% 
+  # Changing from ALL CAPS to lowercase
+  mutate(primary_procedure_nm = str_to_sentence(primary_procedure_nm)) 
+
+
+# Add height in cm to the patient information (the original is a string of ft and inches)
+hcm = patient_information %>% 
+  select(height) %>% 
+  separate(height, into = c("H1", "H2"), sep = "'", convert = T) %>% 
+  transmute(height_cm = H1 * 30.48 + H2 * 2.54)
+
+demographics = bind_cols(demographics, hcm)
 
 
 # n_distinct(demographics_orig$MRN)
