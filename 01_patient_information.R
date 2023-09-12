@@ -25,17 +25,14 @@ demographics = demographics_orig %>%
   rename(age = birth_date) %>% 
   mutate(asa_rating = fct_reorder(asa_rating, asa_rating_c)) %>% 
   # Changing from ALL CAPS to lowercase
-  mutate(primary_procedure_nm = str_to_sentence(primary_procedure_nm)) 
-
-
-# Add height in cm to the patient information (the original is a string of ft and inches)
-hcm = patient_information %>% 
-  select(height) %>% 
+  mutate(primary_procedure_nm = str_to_sentence(primary_procedure_nm)) %>% 
+  # Add height in cm to the patient information (the original is a string of ft and inches)
   separate(height, into = c("H1", "H2"), sep = "'", convert = T) %>% 
-  transmute(height_cm = H1 * 30.48 + H2 * 2.54)
+  mutate(height_cm = H1 * 30.48 + H2 * 2.54)
 
-demographics = bind_cols(demographics, hcm)
-
+# demographics %>% 
+#   ggplot(aes(height_cm)) +
+#   geom_histogram()
 
 # n_distinct(demographics_orig$MRN)
 # n_distinct(demographics_orig$LOG_ID)
@@ -45,9 +42,9 @@ demographics = bind_cols(demographics, hcm)
               count(log_id, mrn, sort = TRUE) %>% 
               pull(n) %>% 
               max()) == 1)
-
-
  
+ write_csv(demographics, "/home/common/mover_data/surginf_cleaned/patient_information_cleaned.csv")
+
 all_procedures = demographics %>% 
    count(primary_procedure_nm, sort = TRUE)
  

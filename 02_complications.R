@@ -46,6 +46,7 @@ complications = complications_combined %>%
 write_csv(complications, "/home/common/mover_data/surginf_cleaned/complications_cleaned.csv")
 
 
+complications = read_csv("/home/common/mover_data/surginf_cleaned/complications_cleaned.csv")
 # quick look at complication rates
 complications %>% 
   count(any_complication) %>% 
@@ -55,7 +56,15 @@ complications %>%
   count(respiratory_comp) %>% 
   mutate(prop = scales::percent(n/sum(n)))
 
+complications %>% 
+  count(death) %>% 
+  mutate(prop = scales::percent(n/sum(n), 0.01))
 
 complications %>% 
   count(infection = str_detect(comp_abbr, "Infection")) %>% 
   mutate(prop = scales::percent(n/sum(n), 0.01))
+
+
+complications %>% 
+  filter(str_detect(comp_full, "death|Death")) %>% 
+  nrow()
