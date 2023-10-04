@@ -2,7 +2,7 @@ library(tidyverse)
 library(scales)
 theme_set(theme_bw())
 
-
+# cleaning ----
 demographics_orig = read_csv(paste0(Sys.getenv("epic_emr"), "patient_information.csv"),
                         col_types = cols(HOSP_ADMSN_TIME = col_datetime(format = "%m/%d/%y %H:%M"), 
                                          HOSP_DISCH_TIME = col_datetime(format = "%m/%d/%y %H:%M"), 
@@ -44,7 +44,11 @@ demographics = demographics_orig %>%
               max()) == 1)
  
  write_csv(demographics, "/home/common/mover_data/surginf_cleaned/patient_information_cleaned.csv")
+ 
+ # exploration ----
+demographics = read_csv("/home/common/mover_data/surginf_cleaned/patient_information_cleaned.csv")
 
 all_procedures = demographics %>% 
    count(primary_procedure_nm, sort = TRUE)
- 
+
+pointblank::scan_data(demographics) 

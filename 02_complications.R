@@ -14,6 +14,12 @@ library(tidyverse)
 
 complications_orig = read_csv(paste0(Sys.getenv("epic_emr"), "patient_post_op_complications.csv"))
 
+complications_orig %>% 
+  mutate(death = str_detect(SMRTDTA_ELEM_VALUE, "Death")) %>% 
+  distinct(LOG_ID, MRN, death) %>% 
+  count(death)
+
+
 complications_all = complications_orig %>% 
   janitor::clean_names() %>% 
   distinct() %>% 
