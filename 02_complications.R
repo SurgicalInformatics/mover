@@ -8,11 +8,13 @@
 # 3. Collapsing all complications stored in multiple rows
 # into a single row/cell per patient. Collapsing is done by comma (", ")
 # 4. Creating two derived variables called death and respiratory that look for these complications within the collapsed lists.
-
+# 5. Most Deaths are noted in Patient Info under discharge as 'Expired', joining those in here
 
 library(tidyverse)
 
 complications_orig = read_csv(paste0(Sys.getenv("epic_emr"), "patient_post_op_complications.csv"))
+
+demographics = read_csv("/home/common/mover_data/surginf_cleaned/patient_information_cleaned.csv")
 
 complications_orig %>% 
   mutate(death = str_detect(SMRTDTA_ELEM_VALUE, "Death")) %>% 
@@ -43,11 +45,19 @@ complications_combined = complications_all %>%
                              str_remove(comp_full, "None, |, None"),
                              comp_full))
 
+comp1 = nrow(complications_combined)
+complications_combined = complications_combined %>% 
+  left_join(select(demographics, log_id, mrn, disch_disp))
+stopifnot(comp1 == nrow(complications_combined))
+
 complications = complications_combined %>% 
-  mutate(death       = if_else(str_detect(comp_abbr, "Death"),
+  mutate(death       = if_else(str_detect(comp_abbr, "Death") | disch_disp == "Expired",
                                "Died", "Alive"),
          respiratory_comp = if_else(str_detect(comp_abbr, "Respiratory"),
                                     "Yes", "No"))
+
+complications %>% 
+  count(death)
 
 write_csv(complications, "/home/common/mover_data/surginf_cleaned/complications_cleaned.csv")
 
