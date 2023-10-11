@@ -12,7 +12,8 @@ sc = spark_connect(master = "local",
                    version = "3.4.0",
                    config = conf)
 
-flowsheet = spark_read_parquet(sc, "flowsheet", path = "/home/common/mover_data/spark_full_flowsheet/")
+#flowsheet = spark_read_parquet(sc, "flowsheet", path = "/home/common/mover_data/spark_full_flowsheet/")
+flowsheet = spark_read_parquet(sc, "flowsheet", path = "/home/common/mover_data/spark_vital/")
 
 
 # waves_orig = fs::dir_ls("/home/common/datastore_surginf/mover_data/") %>% 
