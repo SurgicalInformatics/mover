@@ -5,9 +5,9 @@ theme_set(theme_bw())
 waves_times = read_csv("/home/common/mover_data/surginf_cleaned/waveform_filenames.csv")
 
 waves_times %>% 
-  filter(pat_id_extra == "IP") %>% 
+  filter(pat_id_extra == "CB") %>% 
   select(pat_id, filegroup_id, filepath, filename, datetime, type = pat_id_extra) %>% 
-  write_csv("/home/common/mover_data/surginf_cleaned/pat_id_filegroup_id_filelists.csv")
+  write_csv("/home/common/mover_data/surginf_cleaned/pat_id_filegroup_id_filelists_CB.csv")
   
 
 # we are using the flowsheet as the link between waveform data and patient demographics/complications
@@ -51,7 +51,7 @@ timings = waves_oneline %>%
 timings %>% 
   filter(wave_within_cutoff) %>% 
   select(-wave_within_cutoff) %>% 
-  write_csv("/home/common/mover_data/surginf_cleaned/pat_id_log_id_mrn_lookup.csv")
+  write_csv("/home/common/mover_data/surginf_cleaned/pat_id_log_id_mrn_lookup_CB.csv")
 
 # waveform generally starts 6-7h after 'OR in'
 # a very small number of instances where waveform precedes OR time (negative difference)
